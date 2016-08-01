@@ -7,11 +7,17 @@ namespace ArcaletTools
 {
     public partial class ArcaletSceneControl
     {
-        public static event Action<int, ArcaletRoom> OnLoginRoomEvent;
-        public static event Action<int, ArcaletRoom> OnLogoutRoomEvent;
+        /// <summary>
+        /// 登入場景會觸發的Event
+        /// </summary>
+        public static event Action<ISceneResult, ArcaletRoom> OnLoginRoomEvent;
+        /// <summary>
+        /// 登出場景會觸發的Event
+        /// </summary>
+        public static event Action<ISceneResult, ArcaletRoom> OnLogoutRoomEvent;
+        /// <summary>
+        /// 場景訊息會觸發的Event
+        /// </summary>
         public static event Action<ArcaletMsg, ArcaletRoom> OnMessageInRoomEvent;
-
-
-        public enum State { Fail, Success, Waiting };
     }
 }

@@ -14,26 +14,57 @@ namespace ArcaletTools
         public Dictionary<string, ArcaletGame> AGlist = new Dictionary<string, ArcaletGame>();
 
         #region static
+        /// <summary>
+        /// 使用設置直接登入遊戲
+        /// </summary>
+        /// <param name="username">遊戲賬號</param>
+        /// <param name="password">遊戲密碼</param>
+        /// <returns>ArcaletGame 物件</returns>
         public static ArcaletGame GameLogin(string username, string password)
         {
             return Instance.ArcaletLaunch(username, password);
         }
 
+        /// <summary>
+        /// 使用設置直接登入遊戲
+        /// </summary>
+        /// <param name="username">遊戲賬號</param>
+        /// <param name="password">遊戲密碼</param>
+        /// <param name="CallBackHandler">登入成功或失敗的Callback函式</param>
+        /// <returns>ArcaletGame 物件</returns>
         public static ArcaletGame GameLogin(string username, string password, OnCompleteHandle CallBackHandler)
         {
             return Instance.ArcaletLaunch(username, password, CallBackHandler);
         }
 
+
+        /// <summary>
+        /// 使用自定義的方式登入遊戲
+        /// </summary>
+        /// <param name="username">遊戲賬號</param>
+        /// <param name="password">遊戲密碼</param>
+        /// <param name="_gguid">遊戲guid</param>
+        /// <param name="_sguid">大廳guid</param>
+        /// <param name="_certificate">遊戲憑證</param>
+        /// <returns>ArcaletGame 物件</returns>
         public static ArcaletGame GameLogin(string username, string password, string _gguid, string _sguid, byte[] _certificate)
         {
             return Instance.ArcaletLaunch(username, password, _gguid, _sguid, _certificate);
         }
 
+        /// <summary>
+        /// 登出遊戲
+        /// </summary>
+        /// <param name="ag">需要登出的遊戲ArcaletGame</param>
         public static void GameLogout(ArcaletGame ag)
         {
             Instance.ArcaletLogOut(ag);
         }
 
+        /// <summary>
+        /// 登出遊戲
+        /// </summary>
+        /// <param name="userid">需要登出的賬號（會自動搜尋）</param>
         public static void GameLogout(string userid)
         {
             Instance.ArcaletLogOut(userid);
@@ -46,6 +77,7 @@ namespace ArcaletTools
             ag.onCompletion += CB_ArcaletLaunch;
             ag.onStateChanged += OnStateChanged;
             ag.Launch();
+            AddArcaletGame(ag);
             return ag;
         }
 
@@ -55,6 +87,7 @@ namespace ArcaletTools
             ag.onCompletion += CB_ArcaletLaunch;
             ag.onStateChanged += OnStateChanged;
             ag.Launch();
+            AddArcaletGame(ag);
             return ag;
         }
 
@@ -65,6 +98,7 @@ namespace ArcaletTools
             ag.onCompletion += CB_ArcaletLaunchSpecial;
             ag.onStateChanged += OnStateChanged;
             ag.Launch();
+            AddArcaletGame(ag);
             return ag;
         }
 
@@ -88,6 +122,7 @@ namespace ArcaletTools
 
         void OnStateChanged(int state, int code, ArcaletGame game)
         {
+            Debug.Log("state:" + state.ToString() + " code:" + code);
             if (OnStateChangedEvent != null)
             {
                 OnStateChangedEvent(CodeState.GetOnState(state,code), game);
@@ -107,6 +142,7 @@ namespace ArcaletTools
             {
                 ag.Dispose();
                 ag = null;
+                RemoveArcaletGame(ag);
             }
         }
 
@@ -117,6 +153,7 @@ namespace ArcaletTools
             {
                 ag.Dispose();
                 ag = null;
+                RemoveArcaletGame(ag);
             }
         }
 

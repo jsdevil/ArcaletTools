@@ -108,77 +108,96 @@ namespace ArcaletTools
 
         #endregion
 
-        public class ArcaletRoom : ArcaletScene
+      
+        public void AddSceneLoginEvent(int code,ArcaletRoom room)
         {
-            private bool enterScene = false;
-            public bool EnterScene
+            if (OnLoginRoomEvent != null)
+                OnLoginRoomEvent(CodeState.GetSceneState(code), room);
+        }
+
+        public void AddSceneLogOutEvent(int code, ArcaletRoom room)
+        {
+            if (OnLogoutRoomEvent != null)
+                OnLogoutRoomEvent(CodeState.GetSceneState(code), room);
+        }
+
+        public void AddSceneMessageEvent(ArcaletMsg msg, ArcaletRoom room)
+        {
+            if (OnMessageInRoomEvent != null)
+                OnMessageInRoomEvent(msg, room);
+        }
+
+    }
+
+    public class ArcaletRoom : ArcaletScene
+    {
+        private bool enterScene = false;
+        public bool EnterScene
+        {
+            get
             {
-                get
-                {
-                    return enterScene;
-                }
+                return enterScene;
             }
+        }
 
-            public ArcaletRoom(ArcaletGame game, string sguid, int sid) : base(game, sguid, sid)
+        public ArcaletRoom(ArcaletGame game, string sguid, int sid) : base(game, sguid, sid)
+        {
+
+        }
+
+        public ArcaletRoom(ArcaletGame game, string sguid) : base(game, sguid)
+        {
+
+        }
+
+        void CB_EnterScene(int code, ArcaletScene scene)
+        {
+            ArcaletSceneControl.Instance.AddSceneLoginEvent(code, this);
+
+            //Code為0表示進入場景成功
+            if (code == 0)
             {
-
+                enterScene = true;
             }
-
-            public ArcaletRoom(ArcaletGame game, string sguid) : base(game, sguid)
+            //Code非0表示進入場景失敗
+            else
             {
-
+                enterScene = false;
             }
+        }
 
-            void CB_EnterScene(int code, ArcaletScene scene)
+        /// <summary>
+        /// 遊戲場景大廳訊息
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <param name="delay"></param>
+        /// <param name="scene"></param>
+        void OnSceneMessageIn(string msg, int delay, ArcaletScene scene)
+        {
+            ArcaletSceneControl.Instance.AddSceneMessageEvent(new ArcaletMsg(msg, delay), this);
+        }
+
+        /// <summary>
+        /// 離開遊戲場景
+        /// </summary>
+        public void LeaveScene()
+        {
+            Leave(CB_LeaveScene, null);
+        }
+
+
+        void CB_LeaveScene(int code, object token)
+        {
+            ArcaletSceneControl.Instance.AddSceneLogOutEvent(code, this);
+            //code為0表示離開Scene成功
+            if (code == 0)
             {
-                if (OnLoginRoomEvent != null)
-                    OnLoginRoomEvent(code, this);
-
-                //Code為0表示進入場景成功
-                if (code == 0)
-                {
-                    enterScene = true;
-                }
-                //Code非0表示進入場景失敗
-                else
-                {
-                    enterScene = false;
-                }
+                enterScene = false;
             }
-
-            /// <summary>
-            /// 遊戲場景大廳訊息
-            /// </summary>
-            /// <param name="msg"></param>
-            /// <param name="delay"></param>
-            /// <param name="scene"></param>
-            void OnSceneMessageIn(string msg, int delay, ArcaletScene scene)
+            //code非0表示離開Scene失敗
+            else
             {
-                OnMessageInRoomEvent(new ArcaletMsg(msg, delay), this);
-            }
 
-            /// <summary>
-            /// 離開遊戲場景
-            /// </summary>
-            public void LeaveScene()
-            {
-                Leave(CB_LeaveScene, null);
-            }
-
-
-            void CB_LeaveScene(int code, object token)
-            {
-                OnLogoutRoomEvent(code, this);
-                //code為0表示離開Scene成功
-                if (code == 0)
-                {
-                    enterScene = false;
-                }
-                //code非0表示離開Scene失敗
-                else
-                {
-
-                }
             }
         }
     }

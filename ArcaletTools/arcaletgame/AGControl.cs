@@ -6,9 +6,14 @@ using UnityEngine;
 
 namespace ArcaletTools
 {
-
+    /// <summary>
+    /// Arcalet Release
+    /// </summary>
     public class ArcaletReleaseV
     {
+        /// <summary>
+        /// 目前版本號
+        /// </summary>
         public static string Version
         {
             get
@@ -18,7 +23,8 @@ namespace ArcaletTools
         }
     }
 
-    public partial class ArcaletGameControl : MonoBehaviour
+    [System.Serializable]
+    public partial class ArcaletGameControl 
     {
         #region Static
 
@@ -30,6 +36,7 @@ namespace ArcaletTools
             {
                 if (instance == null)
                 {
+                    Debug.Log("instance = null");
                     instance = new ArcaletGameControl();
                 }
                 return instance;
@@ -44,37 +51,41 @@ namespace ArcaletTools
 
         void AddArcaletGame(ArcaletGame game)
         {
-            lock (AGlist)
+            lock (Instance.AGlist)
             {
-                if (AGlist.ContainsKey(game.gameUserid))
+                if (Instance.AGlist.ContainsKey(game.gameUserid))
                 {
-                    AGlist[game.gameUserid] = game;
+                    Instance.AGlist[game.gameUserid] = game;
                 }
                 else
                 {
-                    AGlist.Add(game.gameUserid, game);
+                    Instance.AGlist.Add(game.gameUserid, game);
                 }
+
+                Debug.Log("Aglist count:" + Instance.AGlist.Count);
             }
         }
 
         void RemoveArcaletGame(ArcaletGame game)
         {
-            lock (AGlist)
+            lock (Instance.AGlist)
             {
-                if (AGlist.ContainsKey(game.gameUserid))
+                if (Instance.AGlist.ContainsKey(game.gameUserid))
                 {
-                    AGlist.Remove(game.gameUserid);
+                    Instance.AGlist.Remove(game.gameUserid);
                 }
             }
         }
 
         public ArcaletGame GetFromAGList(string userid)
         {
-            lock (AGlist)
+            lock (Instance.AGlist)
             {
-                if (AGlist.ContainsKey(userid))
+                Debug.Log("Aglist count:" + Instance.AGlist.Count);
+
+                if (Instance.AGlist.ContainsKey(userid))
                 {
-                    return AGlist[userid];
+                    return Instance.AGlist[userid];
                 }
                 else
                 {
@@ -85,15 +96,24 @@ namespace ArcaletTools
 
         #endregion
 
+        /// <summary>
+        /// 主要憑證
+        /// </summary>
+        public static byte[] mainCertificate;
 
-        #region Setting
+        /// <summary>
+        /// 主要遊戲 GUID
+        /// </summary>
+        public static string mainGguid;
 
-        public static string mainGguid = "";
-        public static string mainSguid = "";
-        public static byte[] mainCertificate = { };
+        /// <summary>
+        /// 主要主大廳 GUID
+        /// </summary>
+        public static string mainSguid;
 
-        public bool ShowDebug = false;
-
-        #endregion
+        /// <summary>
+        /// 是否 Debug
+        /// </summary>
+        public bool ShowDebug;
     }
 }
