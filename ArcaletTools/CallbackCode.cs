@@ -281,6 +281,9 @@ namespace ArcaletTools
             Itemlist = _Itemlist;
         }
 
+        /// <summary>
+        /// 錯誤碼
+        /// </summary>
         public int ErrorCode
         {
             get
@@ -353,6 +356,12 @@ namespace ArcaletTools
             token = _token;
         }
 
+        public IItemInstanceResult(int _code, object _token)
+        {
+            errorcode = _code;
+            token = _token;
+        }
+
         public IItemInstanceResult(int _code, ItemInstanceList _Instancelist, object _token)
         {
             errorcode = _code;
@@ -360,6 +369,9 @@ namespace ArcaletTools
             token = _token;
         }
 
+        /// <summary>
+        /// 錯誤碼
+        /// </summary>
         public int ErrorCode
         {
             get
@@ -368,7 +380,11 @@ namespace ArcaletTools
             }
         }
 
-        public ItemInstanceList ItemData
+        /// <summary>
+        /// item列表 
+        /// （只有在讀取的時候才會有值）
+        /// </summary>
+        public virtual ItemInstanceList ItemData
         {
             get
             {
@@ -385,9 +401,9 @@ namespace ArcaletTools
         }
     }
 
-    public static class CodeState
+    internal static class CodeState
     {
-        public static ILoginResult GetLoginState(int Code)
+        internal static ILoginResult GetLoginState(int Code)
         {
             bool exists = Enum.IsDefined(typeof(LoginState), Code);
 
@@ -402,7 +418,7 @@ namespace ArcaletTools
 
         }
 
-        public static IStateResult GetOnState(int state, int code)
+        internal static IStateResult GetOnState(int state, int code)
         {
             bool exists = Enum.IsDefined(typeof(ConnectState), state);
 
@@ -417,7 +433,7 @@ namespace ArcaletTools
 
         }
 
-        public static ISceneResult GetSceneState(int code)
+        internal static ISceneResult GetSceneState(int code)
         {
             bool exists = Enum.IsDefined(typeof(SceneState), code);
 

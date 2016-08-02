@@ -191,12 +191,17 @@ namespace ArcaletTools
 
                 foreach (DictionaryEntry item in attrlist)
                 {
-                    ItemValue Item_Value = new ItemValue(item);
+                    ItemValue Item_Value = new ItemValue(item,itemid);
 
                     DicItem.Add(Item_Value.name, Item_Value);
                 }
             }
 
+            /// <summary>
+            /// 從ItemList裡獲取ItemValue
+            /// </summary>
+            /// <param name="_name"></param>
+            /// <returns></returns>
             public ItemValue GetAttr(string _name)
             {
                 if (DicItem.ContainsKey(_name))
@@ -219,30 +224,112 @@ namespace ArcaletTools
             /// <summary>
             /// 屬性名稱，也就是 key。
             /// </summary>
-            public string name;
-
+            public readonly string name;
+            private string _Value;
+            
             /// <summary>
             /// 屬性值
             /// </summary>
-            public string value;
+            public string value
+            {
+                get
+                {
+                    return _Value;
+                }
+
+                set
+                {
+                    _Value = value;
+                    boolNew = true;
+                }
+            }
+
+            /// <summary>
+            /// 物品ID
+            /// 若是instance的item才會有值
+            /// </summary>
+            public readonly int itemid = 0;
+
+            /// <summary>
+            /// 物品類型=
+            /// 0:itemClass 1:itemInstance
+            /// </summary>
+            public int itemType = 0;
+
+            /// <summary>
+            /// 是否為修改過的Item
+            /// (初始化的不算)
+            /// </summary>
+            public bool boolNew = false;
 
             /// <summary>
             /// 寫入此屬性值的時間
             /// </summary>
             public DateTime TimeStamp = new DateTime();
 
+            /// <summary>
+            /// 初始化ItemClass
+            /// </summary>
+            /// <param name="_name"></param>
+            /// <param name="_value"></param>
             public ItemValue(string _name, string _value)
             {
                 name = _name;
-                value = _value;
+                _Value = _value;
+                itemType = 0;
             }
 
-            public ItemValue(DictionaryEntry item)
+            /// <summary>
+            /// 初始化ItemInstance
+            /// </summary>
+            /// <param name="item"></param>
+            /// <param name="id"></param>
+            public ItemValue(DictionaryEntry item,int id)
             {
                 name = item.Key.ToString();
                 Hashtable ValueH = item.Value as Hashtable;
-                value = ValueH["value"].ToString();
+                _Value = ValueH["value"].ToString();
                 TimeStamp = DateTime.Parse(ValueH["stamp"].ToString());
+                itemid = id;
+                itemType = 1;
+            }
+
+            /// <summary>
+            /// 初始化ItemInstance
+            /// </summary>
+            /// <param name="_name"></param>
+            /// <param name="_value"></param>
+            /// <param name="_timestamp"></param>
+            /// <param name="_itemid"></param>
+            public ItemValue(string _name,string _value,DateTime _timestamp ,int _itemid)
+            {
+                name = _name;
+                _Value = _value;
+                TimeStamp = _timestamp;
+                itemid = _itemid;
+                itemType = 1;
+            }
+
+            /// <summary>
+            /// 初始化ItemInstance 
+            /// （作為從後台獲取的item）
+            /// </summary>
+            /// <param name="_name"></param>
+            /// <param name="_itemid"></param>
+            public ItemValue(string _name,int _itemid)
+            {
+                name = _name;
+                itemid = _itemid;
+                itemType = 1;
+            }
+
+            /// <summary>
+            /// 更新資料後執行的函式
+            /// </summary>
+            public void UploadComplete()
+            {
+                boolNew = false;
+                TimeStamp = DateTime.Now;
             }
         }
         #endregion

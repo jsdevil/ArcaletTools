@@ -19,5 +19,7 @@ namespace ArcaletTools
         /// 場景訊息會觸發的Event
         /// </summary>
         public static event Action<ArcaletMsg, ArcaletRoom> OnMessageInRoomEvent;
+
+        
     }
 }

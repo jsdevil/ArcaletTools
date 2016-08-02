@@ -8,8 +8,8 @@ namespace ArcaletTools
 {
     public partial class ArcaletItemControl
     {
-        public delegate void OnItemInstanceComplete(IItemInstanceResult result);
+        public delegate void OnItemInstanceReadComplete(IItemInstanceResult result);
+        public delegate void OnItemInstanceWriteComplete(IItemInstanceResult result);
 
-       
     }
 }

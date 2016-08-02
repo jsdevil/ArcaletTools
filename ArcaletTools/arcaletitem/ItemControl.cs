@@ -25,13 +25,26 @@ namespace ArcaletTools
 
         private ArcaletItemControl() { }
 
-
-        public static void GetItemInstanceByName(ArcaletGame ag, string iguidKey, object token, OnItemInstanceComplete OnItemInstanceHandle)
+        /// <summary>
+        /// 用iguidname獲取iteminstance
+        /// </summary>
+        /// <param name="ag"></param>
+        /// <param name="iguidKey"></param>
+        /// <param name="token"></param>
+        /// <param name="OnItemInstanceHandle"></param>
+        public static void GetItemInstanceByName(ArcaletGame ag, string iguidKey, object token, OnItemInstanceReadComplete OnItemInstanceHandle)
         {
             Instance._GetItemInstancebyName(ag, iguidKey, token, OnItemInstanceHandle);
         }
 
-        public static void GetItemInstanceByIguid(ArcaletGame ag, string iguid, object token, OnItemInstanceComplete OnItemInstanceHandle)
+        /// <summary>
+        /// 用iguid獲取iteminstance
+        /// </summary>
+        /// <param name="ag"></param>
+        /// <param name="iguid"></param>
+        /// <param name="token"></param>
+        /// <param name="OnItemInstanceHandle"></param>
+        public static void GetItemInstanceByIguid(ArcaletGame ag, string iguid, object token, OnItemInstanceReadComplete OnItemInstanceHandle)
         {
             Instance._GetItemInstancebyIguid(ag, iguid, token, OnItemInstanceHandle);
         }
