@@ -8,27 +8,16 @@ namespace ArcaletTools
 {
     public delegate void OnSceneCompleteHandle(ISceneResult result);
 
-    public partial class ArcaletSceneControl
+    public partial class ArcaletSceneEx
     {
         #region static
 
         public Dictionary<int, ArcaletRoom> RoomList = new Dictionary<int, ArcaletRoom>();
 
-        static ArcaletSceneControl instance;
-
-        public static ArcaletSceneControl Instance
+        internal ArcaletSceneEx()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = new ArcaletSceneControl();
-                }
-                return instance;
-            }
+            RoomList = new Dictionary<int, ArcaletRoom>();
         }
-
-        private ArcaletSceneControl() { }
 
         /// <summary>
         /// 登入遊戲場景 （動態場景）
@@ -37,9 +26,9 @@ namespace ArcaletTools
         /// <param name="sguid">場景GUID</param>
         /// <param name="SceneID">動態場景ID</param>
         /// <returns></returns>
-        public static ArcaletRoom LoginScene(ArcaletGame ag, string sguid, int SceneID)
+        public ArcaletRoom LoginScene(ArcaletGame ag, string sguid, int SceneID)
         {
-            return Instance._LoginScene(ag, sguid, SceneID);
+            return _LoginScene(ag, sguid, SceneID);
         }
 
         /// <summary>
@@ -50,9 +39,9 @@ namespace ArcaletTools
         /// <param name="SceneID">動態場景ID</param>
         /// <param name="cb">CallBack</param>
         /// <returns></returns>
-        public static ArcaletRoom LoginScene(ArcaletGame ag, string sguid, int SceneID, OnSceneCompleteHandle cb)
+        public ArcaletRoom LoginScene(ArcaletGame ag, string sguid, int SceneID, OnSceneCompleteHandle cb)
         {
-            return Instance._LoginScene(ag, sguid, SceneID,cb);
+            return _LoginScene(ag, sguid, SceneID,cb);
         }
 
         /// <summary>
@@ -61,9 +50,9 @@ namespace ArcaletTools
         /// <param name="ag">ArcaletGame</param>
         /// <param name="sguid">場景GUID</param>
         /// <returns></returns>
-        public static ArcaletRoom LoginScene(ArcaletGame ag, string sguid)
+        public ArcaletRoom LoginScene(ArcaletGame ag, string sguid)
         {
-            return Instance._LoginScene(ag, sguid, 0);
+            return _LoginScene(ag, sguid, 0);
         }
 
         /// <summary>
@@ -73,9 +62,9 @@ namespace ArcaletTools
         /// <param name="sguid">場景GUID</param>
         /// <param name="cb">CallBack</param>
         /// <returns></returns>
-        public static ArcaletRoom LoginScene(ArcaletGame ag, string sguid, OnSceneCompleteHandle cb)
+        public ArcaletRoom LoginScene(ArcaletGame ag, string sguid, OnSceneCompleteHandle cb)
         {
-            return Instance._LoginScene(ag, sguid, 0, cb);
+            return _LoginScene(ag, sguid, 0, cb);
         }
 
         /// <summary>
@@ -237,7 +226,7 @@ namespace ArcaletTools
 
         public virtual void CB_EnterScene(int code, ArcaletScene scene)
         {
-            ArcaletSceneControl.Instance.AddSceneLoginEvent(code, this);
+            ArcaletTool.Scene.AddSceneLoginEvent(code, this);
 
             if(OnSceneCompleteHandle != null)
                 OnSceneCompleteHandle(CodeState.GetSceneState(code));
@@ -262,7 +251,7 @@ namespace ArcaletTools
         /// <param name="scene"></param>
         public virtual void OnSceneMessageIn(string msg, int delay, ArcaletScene scene)
         {
-            ArcaletSceneControl.Instance.AddSceneMessageEvent(new ArcaletMsg(msg, delay), this);
+            ArcaletTool.Scene.AddSceneMessageEvent(new ArcaletMsg(msg, delay), this);
         }
 
         /// <summary>
@@ -276,7 +265,7 @@ namespace ArcaletTools
 
         void CB_LeaveScene(int code, object token)
         {
-            ArcaletSceneControl.Instance.AddSceneLogOutEvent(code, this);
+            ArcaletTool.Scene.AddSceneLogOutEvent(code, this);
             //code為0表示離開Scene成功
             if (code == 0)
             {

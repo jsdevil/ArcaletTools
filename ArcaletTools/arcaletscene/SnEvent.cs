@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ArcaletTools
 {
-    public partial class ArcaletSceneControl
+    public partial class ArcaletSceneEx
     {
         /// <summary>
         /// 登入場景會觸發的Event

@@ -345,6 +345,9 @@ namespace ArcaletTools
         }
     }
 
+    /// <summary>
+    /// Item結束後的返回程式
+    /// </summary>
     public class IItemInstanceResult
     {
         private int errorcode = 0;

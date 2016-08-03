@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ArcaletTools
 {
-    public partial class ArcaletGameControl
+    public partial class ArcaletGameEx
     {
         //action when any ArcaletGame Login
         /// <summary>

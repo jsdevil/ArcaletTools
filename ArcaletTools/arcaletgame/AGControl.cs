@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using System.Collections;
 
 namespace ArcaletTools
 {
@@ -23,27 +24,16 @@ namespace ArcaletTools
         }
     }
 
+
     [System.Serializable]
-    public partial class ArcaletGameControl 
+    public partial class ArcaletGameEx 
     {
         #region Static
 
-        static ArcaletGameControl instance;
-
-        public static ArcaletGameControl Instance
+        internal ArcaletGameEx()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    Debug.Log("instance = null");
-                    instance = new ArcaletGameControl();
-                }
-                return instance;
-            }
+            AGlist = new Dictionary<string, ArcaletGame>();
         }
-
-        private ArcaletGameControl() { }
 
         #endregion
 
@@ -51,44 +41,48 @@ namespace ArcaletTools
 
         void AddArcaletGame(ArcaletGame game)
         {
-            lock (Instance.AGlist)
+            lock (AGlist)
             {
-                if (Instance.AGlist.ContainsKey(game.gameUserid))
+                if (AGlist.ContainsKey(game.gameUserid))
                 {
-                    Instance.AGlist[game.gameUserid] = game;
+                    AGlist[game.gameUserid] = game;
                 }
                 else
                 {
-                    Instance.AGlist.Add(game.gameUserid, game);
+                    AGlist.Add(game.gameUserid, game);
                 }
 
-                Debug.Log("Aglist count:" + Instance.AGlist.Count);
+                ArcaletTool.Debuger("Arcalet Game List Count:" + AGlist.Count);
             }
         }
 
         void RemoveArcaletGame(ArcaletGame game)
         {
-            lock (Instance.AGlist)
+            lock (AGlist)
             {
-                if (Instance.AGlist.ContainsKey(game.gameUserid))
+                if (AGlist.ContainsKey(game.gameUserid))
                 {
-                    Instance.AGlist.Remove(game.gameUserid);
+                    AGlist.Remove(game.gameUserid);
                 }
+
+                ArcaletTool.Debuger("Arcalet Game List Count:" + AGlist.Count);
             }
         }
 
         public ArcaletGame GetFromAGList(string userid)
         {
-            lock (Instance.AGlist)
+            lock (AGlist)
             {
-                Debug.Log("Aglist count:" + Instance.AGlist.Count);
+                ArcaletTool.Debuger("Arcalet Game List Count:" + AGlist.Count);
 
-                if (Instance.AGlist.ContainsKey(userid))
+                if (AGlist.ContainsKey(userid))
                 {
-                    return Instance.AGlist[userid];
+                    return AGlist[userid];
                 }
                 else
                 {
+                    ArcaletTool.Debuger(userid + " in Arcalet Game List no avaible");
+
                     return null;
                 }
             }
@@ -96,24 +90,6 @@ namespace ArcaletTools
 
         #endregion
 
-        /// <summary>
-        /// 主要憑證
-        /// </summary>
-        public static byte[] mainCertificate;
-
-        /// <summary>
-        /// 主要遊戲 GUID
-        /// </summary>
-        public static string mainGguid;
-
-        /// <summary>
-        /// 主要主大廳 GUID
-        /// </summary>
-        public static string mainSguid;
-
-        /// <summary>
-        /// 是否 Debug
-        /// </summary>
-        public bool ShowDebug;
+        
     }
 }
